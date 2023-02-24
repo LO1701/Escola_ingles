@@ -1,9 +1,13 @@
-import express from 'express';
-import PessoaController from '../controllers/pessoaController.js';
+const express = require('express');
+const PessoaController  = require('../controllers/pessoaController.js');
 
-const route = express.Router();
+const pessoaRoute = express.Router();
 
-route
-    .get('/pessoas', PessoaController.mostraPessoas)
+pessoaRoute
+    .get('/pessoas', PessoaController.buscaPessoas)
+    .get('/pessoas/:id', PessoaController.buscaPessoaId)
+    .post('/pessoas', PessoaController.criaPessoa)
+    .put('/pessoas/:id', PessoaController.atualizaPessoa)
+    .delete('/pessoas/:id', PessoaController.deletaPessoa);
 
-export default route;
+module.exports = pessoaRoute
