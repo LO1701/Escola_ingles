@@ -1,8 +1,12 @@
 const dataBase = require("../models");
 class PessoaController{
-    static async buscaPessoas(req, res) {
+    static async buscaPessoasAtivas(req, res) {
         try {
-            const todasPessoas = await dataBase.Pessoas.findAll();
+            const todasPessoas = await dataBase.Pessoas.findAll({
+                where:{
+                    ativo: true
+                }
+            });
             res.status(200).json(todasPessoas);
         } catch (error) {
             res.status(500).send(`Erro ao procurar as pessoas - ${error.message}`);

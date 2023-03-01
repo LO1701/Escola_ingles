@@ -4,7 +4,7 @@ const PessoaController  = require('../controllers/pessoaController.js');
 const pessoaRoute = express.Router();
 
 pessoaRoute
-    .get('/pessoas', PessoaController.buscaPessoas)
+    .get('/pessoas', PessoaController.buscaPessoasAtivas)
     .get('/pessoas/:id', PessoaController.buscaPessoaId)
     .post('/pessoas', PessoaController.criaPessoa)
     .put('/pessoas/:id', PessoaController.atualizaPessoa)
