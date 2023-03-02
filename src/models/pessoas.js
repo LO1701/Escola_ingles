@@ -21,10 +21,17 @@ module.exports = (sequelize, DataTypes) => {
     nome: DataTypes.STRING,
     email: DataTypes.STRING,
     role: DataTypes.STRING,
-    ativo: DataTypes.BOOLEAN
+    ativo: DataTypes.BOOLEAN,
+    deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Pessoas',
+    paranoid: true,
+    defaultScope: {
+      where:{
+        ativo: true
+      }
+    }
   });
   return Pessoas;
 };

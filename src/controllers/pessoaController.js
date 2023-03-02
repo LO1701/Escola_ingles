@@ -102,6 +102,23 @@ class PessoaController{
         }
     }
 
+    static async restauraPessoa(req, res) {
+        const id = req.params.id;
+
+        try {
+            await dataBase.Pessoas.restore({
+                where: {
+                    id: Number(id)
+                }
+            });
+
+            res.status(200).json({msg: 'Usuário restaurado com sucesso'}); 
+        } catch (error) {
+            res.status(500).send(`Erro ao restaurar o usuário - ${error.message}`);
+        }
+        
+    }
+
     static async buscaMatriculaId(req, res) {
         try {
             const {idEstudante, idMatricula} = req.params;
@@ -182,6 +199,22 @@ class PessoaController{
             return res.status(200).send('Matrícula deletada com sucesso');
         } catch (error) {
             res.status(500).send(`Erro ao deletar o Matrícula - ${error.message}`);
+        }
+    }
+
+    static async restauraMatricula(req, res) {
+        const id = req.params.idMatricula;
+
+        try {
+            await dataBase.Matriculas.restore({
+                where: {
+                    id: Number(id)
+                }
+            });
+    
+            res.status(200).json({msg: 'Matrícula restaurada com sucesso'});
+        } catch (error) {
+            res.status(500).send(`Erro ao restaurar a Matrícula - ${error.message}`);
         }
     }
 }

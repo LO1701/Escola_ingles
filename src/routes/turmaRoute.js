@@ -8,6 +8,7 @@ turmaRoute
     .get('/turmas/:id', TurmaController.buscaTurmaId)
     .post('/turmas', TurmaController.criaTurma)
     .put('/turmas/:id', TurmaController.atualizaTurma)
-    .delete('/turmas/:id', TurmaController.deletaTurma);
+    .delete('/turmas/:id', TurmaController.deletaTurma)
+    .post('/turmas/:id', TurmaController.restauraTurma);
 
 module.exports = turmaRoute

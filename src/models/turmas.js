@@ -22,10 +22,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Turmas.init({
-    data_inicio: DataTypes.DATEONLY
+    data_inicio: DataTypes.DATEONLY,
+    deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Turmas',
+    paranoid: true,
   });
   return Turmas;
 };

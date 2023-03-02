@@ -16,10 +16,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Niveis.init({
-    descricao_niveis: DataTypes.STRING
+    descricao_niveis: DataTypes.STRING,
+    deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Niveis',
+    paranoid: true,
   });
   return Niveis;
 };

@@ -8,6 +8,7 @@ nivelRoute
     .get('/niveis/:id', NivelController.buscaNivelId)
     .post('/niveis', NivelController.criaNivel)
     .put('/niveis/:id', NivelController.atualizaNivel)
-    .delete('/niveis/:id', NivelController.deletaNivel);
+    .delete('/niveis/:id', NivelController.deletaNivel)
+    .post('/niveis/:id', NivelController.restauraNivel);
 
 module.exports = nivelRoute

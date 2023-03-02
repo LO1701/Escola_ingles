@@ -9,9 +9,11 @@ pessoaRoute
     .post('/pessoas', PessoaController.criaPessoa)
     .put('/pessoas/:id', PessoaController.atualizaPessoa)
     .delete('/pessoas/:id', PessoaController.deletaPessoa)
+    .post('/pessoas/:id', PessoaController.restauraPessoa)
     .get('/pessoas/:idEstudante/matricula/:idMatricula', PessoaController.buscaMatriculaId)
     .post('/pessoas/:idEstudante/matricula', PessoaController.criaMatricula)
     .put('/pessoas/:idEstudante/matricula/:idMatricula', PessoaController.atualizaMatricula)
-    .delete('/pessoas/:id/matricula/:idMatricula', PessoaController.deletaMatricula);
+    .delete('/pessoas/:id/matricula/:idMatricula', PessoaController.deletaMatricula)
+    .post('/pessoas/:id/matricula/:idMatricula', PessoaController.restauraMatricula);
 
 module.exports = pessoaRoute

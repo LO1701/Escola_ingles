@@ -99,6 +99,22 @@ class NivelController{
             res.status(500).send(`Erro ao deletar o nível - ${error.message}`);
         }
     }
+
+    static async restauraNivel(req, res) {
+        const id = req.params.id;
+
+        try {
+            await dataBase.Niveis.restore({
+                where: {
+                    id: Number(id)
+                }
+            });
+    
+            res.status(200).json({msg: 'Nível restaurado com sucesso'});
+        } catch (error) {
+            res.status(500).send(`Erro ao restaurar o nível - ${error.message}`);
+        }
+    }
 }
 
 module.exports = NivelController
