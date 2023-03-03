@@ -2,11 +2,16 @@ const dataBase = require("../models");
 class PessoaController{
     static async buscaPessoasAtivas(req, res) {
         try {
-            const todasPessoas = await dataBase.Pessoas.findAll({
-                where:{
-                    ativo: true
-                }
-            });
+            const todasPessoasAtivas = await dataBase.Pessoas.findAll();
+            res.status(200).json(todasPessoasAtivas);
+        } catch (error) {
+            res.status(500).send(`Erro ao procurar as pessoas - ${error.message}`);
+        }
+    }
+
+    static async buscaTodasPessoas(req, res) {
+        try {
+            const todasPessoas = await dataBase.Pessoas.scope('todos').findAll();
             res.status(200).json(todasPessoas);
         } catch (error) {
             res.status(500).send(`Erro ao procurar as pessoas - ${error.message}`);
@@ -117,6 +122,28 @@ class PessoaController{
             res.status(500).send(`Erro ao restaurar o usuário - ${error.message}`);
         }
         
+    }
+
+    static async buscaMatriculasPessoa(req, res) {
+        try {
+            const {idEstudante} = req.params;
+
+            const pessoaProcurada = await dataBase.Pessoas.findOne({
+                where: {
+                    id: idEstudante
+                }
+            });
+
+            if(!pessoaProcurada)
+                return res.status(500).send('Matrícula não encontrada');
+                                                            //criei esse método no escopo de associação
+            const pessoaMatriculas = await pessoaProcurada.getMatriculasAtivas();
+
+            res.status(200).json(pessoaMatriculas); 
+
+        } catch (error) {
+            res.status(500).send(`Erro ao encontrar a matricula - ${error.message}`);
+        }
     }
 
     static async buscaMatriculaId(req, res) {
