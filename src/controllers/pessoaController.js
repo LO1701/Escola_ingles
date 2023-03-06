@@ -135,12 +135,12 @@ class PessoaController{
             });
 
             if(!pessoaProcurada)
-                return res.status(500).send('Matrícula não encontrada');
+                return res.status(500).send('Pessoa não encontrada');
                                                             //criei esse método no escopo de associação
             const pessoaMatriculas = await pessoaProcurada.getMatriculasAtivas();
 
             res.status(200).json(pessoaMatriculas); 
-
+            
         } catch (error) {
             res.status(500).send(`Erro ao encontrar a matricula - ${error.message}`);
         }
@@ -240,6 +240,42 @@ class PessoaController{
             });
     
             res.status(200).json({msg: 'Matrícula restaurada com sucesso'});
+        } catch (error) {
+            res.status(500).send(`Erro ao restaurar a Matrícula - ${error.message}`);
+        }
+    }
+
+    static async buscaMatriculasPorTurmas(req, res) {
+        const id = req.params.idTurma;
+
+        try {                                                  //Função agregadora
+            const matriculasTurmas = await dataBase.Matriculas.findAndCountAll({
+                where: {
+                    turma_id: Number(id),
+                    status: 'confirmado'
+                },
+                order: [['createdAt', 'ASC']]
+            });
+    
+            res.status(200).json(matriculasTurmas);
+        } catch (error) {
+            res.status(500).send(`Erro ao restaurar a Matrícula - ${error.message}`);
+        }
+    }
+
+    static async buscaMatriculasPorTurmas(req, res) {
+        const id = req.params.idTurma;
+
+        try {                                                  //Função agregadora
+            const matriculasTurmas = await dataBase.Matriculas.findAndCountAll({
+                where: {
+                    turma_id: Number(id),
+                    status: 'confirmado'
+                },
+                order: [['createdAt', 'ASC']]
+            });
+    
+            res.status(200).json(matriculasTurmas);
         } catch (error) {
             res.status(500).send(`Erro ao restaurar a Matrícula - ${error.message}`);
         }

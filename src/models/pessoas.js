@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'estudante_id',
         scope: {   //nome disso é escopo de associação
           status: 'confirmado'
-        }, as: 'matriculasAtivas' //utilizo assim dai await pessoaProcurada.getMatriculasAtivas()
+        }, as: 'matriculasAtivas' //utiliza assim dai await pessoaProcurada.getMatriculasAtivas() no controller
       });
     }
   }
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       validate:{
         funcaoValidadora: function (dado) {
           if(dado.length < 3)
-            throw new Error ('O campo nome é inválido')
+            throw new Error ('O campo nome é inválido');
         }
       }
     },

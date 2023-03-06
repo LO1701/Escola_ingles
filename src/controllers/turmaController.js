@@ -1,9 +1,19 @@
 const dataBase = require("../models");
-
+const { Op } = require("sequelize");
 class TurmaController{
     static async buscaTurmas(req, res) {
+
+        const where = {};
+        const { data_inicio, data_final } = req.query;
+
+        if(data_inicio || data_final){
+            where.data_inicio = {};
+            where.data_inicio[Op.gte] = data_inicio;
+            where.data_inicio[Op.lte] = data_final;
+        }
+
         try {
-            const todasTurmas = await dataBase.Turmas.findAll();
+            const todasTurmas = await dataBase.Turmas.findAll({ where });
             res.status(200).json(todasTurmas);
         } catch (error) {
             res.status(500).send(`Erro ao procurar as turmas - ${error.message}`);
