@@ -1,4 +1,5 @@
 const dataBase = require("../models");
+const sequelize = require("sequelize")
 class PessoaController{
     static async buscaPessoasAtivas(req, res) {
         try {
@@ -259,25 +260,60 @@ class PessoaController{
     
             res.status(200).json(matriculasTurmas);
         } catch (error) {
-            res.status(500).send(`Erro ao restaurar a Matrícula - ${error.message}`);
+            res.status(500).send(`Erro - ${error.message}`);
         }
     }
 
-    static async buscaMatriculasPorTurmas(req, res) {
-        const id = req.params.idTurma;
+    static async buscaTurmasLotadas(req, res) {
+        //const id = req.params.idTurma;
+
+        const lotacaoTurma = 2;
 
         try {                                                  //Função agregadora
-            const matriculasTurmas = await dataBase.Matriculas.findAndCountAll({
+            const turmasLotadas = await dataBase.Matriculas.findAndCountAll({
                 where: {
-                    turma_id: Number(id),
                     status: 'confirmado'
                 },
-                order: [['createdAt', 'ASC']]
+                attributes: ['turma_id'], 
+                group: ['turma_id'],
+                having: sequelize.literal(`count(turma_id) >= ${lotacaoTurma}`) //assim que se escreve sql
             });
-    
-            res.status(200).json(matriculasTurmas);
+
+            res.status(200).json(turmasLotadas);
         } catch (error) {
-            res.status(500).send(`Erro ao restaurar a Matrícula - ${error.message}`);
+            res.status(500).send(`Erro - ${error.message}`);
+        }
+    }
+
+    static async cancelaPessoaEMatricula(req, res) {
+        const estudanteId = req.params.id;
+
+        try {
+            const procuraPessoa = await dataBase.Pessoas.findOne({
+                where: {
+                    id: estudanteId
+                }
+            });
+
+            if(!procuraPessoa)
+                return res.status(404).json({msg: 'Usuário não encontrado'});
+
+            await dataBase.sequelize.transaction(async transacao => { // caso ocorra algum erro o transaction vai retornar as alterações no bd
+                await dataBase.Pessoas.update({ativo: false}, {
+                    where: {
+                        id: estudanteId
+                    }
+                }, { transaction: transacao }); 
+                await dataBase.Matriculas.update({status: 'cancelado'},{
+                    where: {
+                        estudante_id: estudanteId
+                    }
+                }, { transaction: transacao });
+            });
+
+            res.status(200).send(`O usuário ${procuraPessoa.nome} foi desativado`);
+        } catch (error) {
+            
         }
     }
 }

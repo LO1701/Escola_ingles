@@ -16,7 +16,9 @@ pessoaRoute
     .post('/pessoas/:idEstudante/matricula', PessoaController.criaMatricula)
     .put('/pessoas/:idEstudante/matricula/:idMatricula', PessoaController.atualizaMatricula)
     .delete('/pessoas/:id/matricula/:idMatricula', PessoaController.deletaMatricula)
+    .post('/pessoas/:id/matricula/cancelada', PessoaController.cancelaPessoaEMatricula)
     .post('/pessoas/:id/matricula/:idMatricula', PessoaController.restauraMatricula)
-    .get('/pessoas/matricula/turma/:idTurma', PessoaController.buscaMatriculasPorTurmas);
+    .get('/pessoas/matricula/turma/:idTurma', PessoaController.buscaMatriculasPorTurmas)
+    .get('/pessoas/matricula/turma', PessoaController.buscaTurmasLotadas);
 
 module.exports = pessoaRoute

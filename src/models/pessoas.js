@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         validaRole: function(role){
-          if(role !== 'estudante' && (role !== 'professor' && role !== 'professora'))
+          if(role !== 'estudante' && (role !== 'professor' && role !== 'professora') && role !== 'admin')
             throw new Error ('Permissão inválida');
         }
       }
