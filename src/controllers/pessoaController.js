@@ -1,9 +1,12 @@
-const dataBase = require("../models");
-const sequelize = require("sequelize")
+// const dataBase = require("../models");
+// const sequelize = require("sequelize");
+const Services = require('../services/Services.js');
+const pessoasServices = new Services('Pessoas');
+
 class PessoaController{
     static async buscaPessoasAtivas(req, res) {
         try {
-            const todasPessoasAtivas = await dataBase.Pessoas.findAll();
+            const todasPessoasAtivas = await pessoasServices.pegaTodosOsRegistros();
             res.status(200).json(todasPessoasAtivas);
         } catch (error) {
             res.status(500).send(`Erro ao procurar as pessoas - ${error.message}`);
