@@ -1,5 +1,8 @@
-const dataBase = require("../models");
+// const dataBase = require("../models");
 const { Op } = require("sequelize");
+const { TurmasServices } = require('../services'); // aqui não tem nada pq esta utilizando o index.js do services
+const turmasServices = new TurmasServices();
+
 class TurmaController{
     static async buscaTurmas(req, res) {
 
@@ -13,7 +16,7 @@ class TurmaController{
         }
 
         try {
-            const todasTurmas = await dataBase.Turmas.findAll({ where });
+            const todasTurmas = await turmasServices.pegaRegistros(where);
             res.status(200).json(todasTurmas);
         } catch (error) {
             res.status(500).send(`Erro ao procurar as turmas - ${error.message}`);
@@ -24,11 +27,7 @@ class TurmaController{
         try {
             const id = req.params.id;
 
-            const turmaProcurada = await dataBase.Turmas.findOne({
-                where: {
-                    id: id
-                }
-            });
+            const turmaProcurada = await turmasServices.pegaUmRegistroId(id);
 
             if(turmaProcurada)
                 return res.status(200).json(turmaProcurada);
@@ -43,7 +42,7 @@ class TurmaController{
         try {
             const novaTurma = req.body;
 
-            await dataBase.Turmas.create(novaTurma);
+            await turmasServices.criaNovoRegistro(novaTurma);
 
             return res.status(200).send(`Turma criado com sucesso, data de início em ${novaTurma.data_inicio}`);
         } catch (error) {
@@ -57,17 +56,9 @@ class TurmaController{
         const id = req.params.id;
 
         try {
-            await dataBase.Turmas.update(novasInformacoes, {
-                where: {
-                    id: id
-                }
-            });
+            await turmasServices.atualizaRegistro(id, novasInformacoes);
     
-            const procuraTurma = await dataBase.Turmas.findOne({
-                where:{
-                    id: id
-                }
-            });
+            const procuraTurma = await turmasServices.pegaUmRegistroId(id);
     
             res.status(200).json(procuraTurma);
         } catch (error) {
@@ -79,20 +70,12 @@ class TurmaController{
         try {
             const id = req.params.id;
 
-            const TurmaProcurada = await dataBase.Turmas.findOne({
-                where: {
-                    id: id
-                }
-            });
+            const TurmaProcurada = turmasServices.pegaUmRegistroId(id);
 
             if(!TurmaProcurada)
                 return res.status(500).send('Turma não encontrada');
 
-            await dataBase.Turmas.destroy({
-                where: {
-                    id: id
-                }
-            });
+            await turmasServices.excluiRegistro(id);
             
             return res.status(200).send('Turma deletada com sucesso');
         } catch (error) {
@@ -104,11 +87,7 @@ class TurmaController{
         const id = req.params.id;
 
         try {
-            await dataBase.Turmas.restore({
-                where: {
-                    id: Number(id)
-                }
-            });
+            await turmasServices.restauraRegistro(id);
     
             res.status(200).json({msg: 'Turma restaurado com sucesso'});
         } catch (error) {

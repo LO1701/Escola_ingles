@@ -1,9 +1,12 @@
-const dataBase = require("../models");
+// const dataBase = require("../models");
+
+const Services = require('../services/Services.js');
+const niveisServices = new Services('Niveis');
 
 class NivelController{
     static async buscaNiveis(req, res) {
         try {
-            const todosNiveis = await dataBase.Niveis.findAll();
+            const todosNiveis = await niveisServices.pegaTodosOsRegistros();
             res.status(200).json(todosNiveis);
         } catch (error) {
             res.status(500).send(`Erro ao procurar os niveis - ${error.message}`);
@@ -14,11 +17,7 @@ class NivelController{
         try {
             const id = req.params.id;
 
-            const NivelProcurado = await dataBase.Niveis.findOne({
-                where: {
-                    id: id
-                }
-            });
+            const NivelProcurado = await niveisServices.pegaUmRegistroId(id)
 
             if(NivelProcurado)
                 return res.status(200).json(NivelProcurado);
@@ -34,16 +33,12 @@ class NivelController{
         try {
             const novoNivel = req.body;
 
-            const procuraNivel = await dataBase.Niveis.findOne({
-                where: {
-                    descricao_niveis: novoNivel.descricao_niveis
-                }
-            });
+            const procuraNivel = await niveisServices.pegaRegistro({descricao_niveis: novoNivel.descricao_niveis});
 
             if(procuraNivel)
                 return res.status(400).send('Nível já cadastrado');
 
-            const novoNivelCriado = await dataBase.Niveis.create(novoNivel);
+            await niveisServices.criaNovoRegistro(novoNivel);
 
             return res.status(200).send(`Nível ${novoNivel.descricao_niveis} criado com sucesso`);
         } catch (error) {
@@ -57,17 +52,9 @@ class NivelController{
         const id = req.params.id;
 
         try {
-            await dataBase.Niveis.update(novasInformacoes, {
-                where: {
-                    id: id
-                }
-            });
+            await niveisServices.atualizaRegistro(id, novasInformacoes);
     
-            const procuraNivel = await dataBase.Niveis.findOne({
-                where:{
-                    id: id
-                }
-            });
+            const procuraNivel = await niveisServices.pegaUmRegistroId(id);
     
             res.status(200).json(procuraNivel);
         } catch (error) {
@@ -79,20 +66,12 @@ class NivelController{
         try {
             const id = req.params.id;
 
-            const nivelProcurado = await dataBase.Niveis.findOne({
-                where: {
-                    id: id
-                }
-            });
+            const nivelProcurado = await niveisServices.pegaUmRegistroId(id);
 
             if(!nivelProcurado)
                 return res.status(500).send('Nível não encontrado');
 
-            await dataBase.Niveis.destroy({
-                where: {
-                    id: id
-                }
-            });
+            await niveisServices.excluiRegistro(id);
             
             return res.status(200).send('Nível deletado com sucesso');
         } catch (error) {
@@ -104,11 +83,7 @@ class NivelController{
         const id = req.params.id;
 
         try {
-            await dataBase.Niveis.restore({
-                where: {
-                    id: Number(id)
-                }
-            });
+            await niveisServices.restauraRegistro(id);
     
             res.status(200).json({msg: 'Nível restaurado com sucesso'});
         } catch (error) {
